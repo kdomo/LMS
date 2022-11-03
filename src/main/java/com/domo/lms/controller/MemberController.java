@@ -4,6 +4,7 @@ import com.domo.lms.entity.Member;
 import com.domo.lms.model.MemberInput;
 import com.domo.lms.repository.MemberRepository;
 import com.domo.lms.service.MemberService;
+import com.domo.lms.util.MailUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,12 +17,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 
 @Controller
-@RequestMapping("/members")
+@RequestMapping("/member")
 @RequiredArgsConstructor
 public class MemberController {
 
     private final MemberService memberService;
-
     @GetMapping("/register")
     public String register() {
         return "member/register";
@@ -32,6 +32,13 @@ public class MemberController {
         boolean result = memberService.register(memberInput);
         model.addAttribute("result", result);
         return "member/register_complete";
+    }
+
+    @GetMapping("/email-auth")
+    public String emailAuth(Model model, String uuid){
+        boolean result = memberService.emailAuth(uuid);
+        model.addAttribute("result", result);
+        return "member/email_auth";
     }
 
 }
