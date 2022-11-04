@@ -1,11 +1,14 @@
 package com.domo.lms.entity;
 
+import com.domo.lms.type.ROLE;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import java.time.LocalDateTime;
 
@@ -29,11 +32,14 @@ public class Member {
 
     private boolean emailAuthYn;
 
-    private String emailAuthKey;
-
     private LocalDateTime emailAuthDt;
+
+    private String emailAuthKey;
 
     private String resetPasswordKey;
 
     private LocalDateTime resetPasswordLimitDt;
+
+    @Enumerated(EnumType.STRING)
+    private ROLE role;
 }

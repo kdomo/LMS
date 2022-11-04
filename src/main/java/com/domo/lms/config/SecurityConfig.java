@@ -56,6 +56,8 @@ public class SecurityConfig {
                         "/member/email-auth",
                         "/member/find/password",
                         "/member/reset/password").permitAll()
+                .antMatchers("/admin/**")
+                .hasRole("ADMIN")
                 .anyRequest()
                 .authenticated()
                 .and()

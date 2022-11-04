@@ -5,6 +5,7 @@ import com.domo.lms.entity.Member;
 import com.domo.lms.model.MemberInput;
 import com.domo.lms.model.ResetPasswordInput;
 import com.domo.lms.repository.MemberRepository;
+import com.domo.lms.type.ROLE;
 import com.domo.lms.util.MailUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,6 +22,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.domo.lms.type.ROLE.*;
+
 @Service
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
@@ -34,7 +37,7 @@ public class MemberServiceImpl implements MemberService {
             return false;
         }
 
-        String encPassword = BCrypt.hashpw(parameter.getPassword(),BCrypt.gensalt());
+        String encPassword = BCrypt.hashpw(parameter.getPassword(), BCrypt.gensalt());
         String uuid = UUID.randomUUID().toString();
         memberRepository.save(Member.builder()
                 .userId(parameter.getUserId())
@@ -44,6 +47,7 @@ public class MemberServiceImpl implements MemberService {
                 .regDt(LocalDateTime.now())
                 .emailAuthYn(false)
                 .emailAuthKey(uuid)
+                .role(USER)
                 .build());
 
         String email = parameter.getUserId();
@@ -58,10 +62,15 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public boolean emailAuth(String uuid) {
         Optional<Member> optionalMember = memberRepository.findByEmailAuthKey(uuid);
-        if(!optionalMember.isPresent()){
+        if (!optionalMember.isPresent()) {
             return false;
         }
         Member member = optionalMember.get();
+
+        if (member.isEmailAuthYn()) {
+            return false;
+        }
+
         member.setEmailAuthYn(true);
         member.setEmailAuthDt(LocalDateTime.now());
         memberRepository.save(member);
@@ -108,7 +117,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public boolean checkResetPassword(String uuid) {
         Optional<Member> member = memberRepository.findByResetPasswordKey(uuid);
-        if(!member.isPresent()){
+        if (!member.isPresent()) {
             return false;
         }
         return true;
@@ -120,13 +129,16 @@ public class MemberServiceImpl implements MemberService {
         Member member = memberRepository.findById(username)
                 .orElseThrow(() -> new UsernameNotFoundException("회원 정보가 존재하지 않습니다."));
 
-        if(!member.isEmailAuthYn()){
+        if (!member.isEmailAuthYn()) {
             throw new MemberNotEmailAuthException("이메일 활성화 이후에 로그인을 해주세요.");
         }
 
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
         grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        if (member.getRole() == ADMIN) {
+            grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        }
 
-        return new User(member.getUserId(), member.getPassword(),grantedAuthorities);
+            return new User(member.getUserId(), member.getPassword(), grantedAuthorities);
     }
 }
