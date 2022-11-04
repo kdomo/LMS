@@ -70,7 +70,10 @@ public class SecurityConfig {
                 .logout()
                 .logoutUrl("/member/logout")
                 .logoutSuccessUrl("/")
-                .invalidateHttpSession(true);
+                .invalidateHttpSession(true)
+                .and()
+                .exceptionHandling()
+                .accessDeniedPage("/error/denied");
                 ;
         return http.build();
     }
