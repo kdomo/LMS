@@ -3,6 +3,7 @@ package com.domo.lms.service;
 import com.domo.lms.exception.MemberNotEmailAuthException;
 import com.domo.lms.entity.Member;
 import com.domo.lms.model.MemberInput;
+import com.domo.lms.model.ResetPasswordInput;
 import com.domo.lms.repository.MemberRepository;
 import com.domo.lms.util.MailUtils;
 import lombok.RequiredArgsConstructor;
@@ -64,6 +65,52 @@ public class MemberServiceImpl implements MemberService {
         member.setEmailAuthYn(true);
         member.setEmailAuthDt(LocalDateTime.now());
         memberRepository.save(member);
+        return true;
+    }
+
+    @Override
+    public boolean sendResetPassword(ResetPasswordInput parameter) {
+        Member member = memberRepository
+                .findByUserIdAndUserName(parameter.getUserId(), parameter.getUserName())
+                .orElseThrow(() -> new UsernameNotFoundException("회원 정보가 존재하지 않습니다."));
+
+        String uuid = UUID.randomUUID().toString();
+        member.setResetPasswordKey(uuid);
+        member.setResetPasswordLimitDt(LocalDateTime.now().plusDays(1));
+        memberRepository.save(member);
+
+        String email = parameter.getUserId();
+        String subject = "LMS 사이트 비밀번호 초기화 메일";
+        String text = "<p>LMS 사이트 비밀번호 초기화 메일 입니다.</p>" +
+                "<p>아래 링크를 클릭하여 비밀번호 초기화를 진행 해 주세요.</p>" +
+                "<div><a href='http://localhost:8080/member/reset/password?uuid=" + uuid + "'>비밀번호 초기화 링크</a><div>";
+        mailUtils.sendMail(email, subject, text);
+        return false;
+    }
+
+    @Override
+    public boolean resetPassword(String uuid, String password) {
+        Member member = memberRepository.findByResetPasswordKey(uuid)
+                .orElseThrow(() -> new UsernameNotFoundException("회원 정보가 존재하지 않습니다."));
+
+        if (member.getResetPasswordLimitDt() == null ||
+                member.getResetPasswordLimitDt().isBefore(LocalDateTime.now())) {
+            throw new RuntimeException("비밀번호 변경 유효 기간이 끝났습니다.");
+        }
+        String encPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+        member.setPassword(encPassword);
+        member.setResetPasswordKey("");
+        member.setResetPasswordLimitDt(null);
+        memberRepository.save(member);
+        return true;
+    }
+
+    @Override
+    public boolean checkResetPassword(String uuid) {
+        Optional<Member> member = memberRepository.findByResetPasswordKey(uuid);
+        if(!member.isPresent()){
+            return false;
+        }
         return true;
     }
 

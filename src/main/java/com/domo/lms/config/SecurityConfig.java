@@ -53,7 +53,9 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/",
                         "/member/register",
-                        "/member/email-auth").permitAll()
+                        "/member/email-auth",
+                        "/member/find/password",
+                        "/member/reset/password").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()

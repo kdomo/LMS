@@ -2,6 +2,7 @@ package com.domo.lms.controller;
 
 import com.domo.lms.entity.Member;
 import com.domo.lms.model.MemberInput;
+import com.domo.lms.model.ResetPasswordInput;
 import com.domo.lms.repository.MemberRepository;
 import com.domo.lms.service.MemberService;
 import com.domo.lms.util.MailUtils;
@@ -28,6 +29,18 @@ public class MemberController {
         return "member/login";
     }
 
+    @GetMapping("/find/password")
+    public String findPassword() {
+        return "/member/find_password";
+    }
+
+    @PostMapping("/find/password")
+    public String findPasswordSubmit(Model model, ResetPasswordInput parameter) {
+        boolean result = memberService.sendResetPassword(parameter);
+        model.addAttribute("result", result);
+        return "member/find_password_result";
+    }
+
     @GetMapping("/register")
     public String register() {
         return "member/register";
@@ -41,7 +54,7 @@ public class MemberController {
     }
 
     @GetMapping("/email-auth")
-    public String emailAuth(Model model, String uuid){
+    public String emailAuth(Model model, String uuid) {
         boolean result = memberService.emailAuth(uuid);
         model.addAttribute("result", result);
         return "member/email_auth";
@@ -50,6 +63,26 @@ public class MemberController {
     @GetMapping("/info")
     public String memberInfo() {
         return "member/info";
+    }
+
+    @GetMapping("/reset/password")
+    public String resetPassword(Model model, HttpServletRequest request) {
+        String uuid = request.getParameter("uuid");
+        boolean result = memberService.checkResetPassword(uuid);
+        model.addAttribute("result", result);
+        return "member/reset_password";
+    }
+
+    @PostMapping("/reset/password")
+    public String resetPasswordSubmit(Model model, ResetPasswordInput parameter) {
+        boolean result = false;
+        try {
+            result = memberService.resetPassword(parameter.getUuid(), parameter.getPassword());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        model.addAttribute("result", result);
+        return "member/reset_password_result";
     }
 
 }
