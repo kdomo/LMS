@@ -2,7 +2,10 @@ package com.domo.lms.service;
 
 import com.domo.lms.exception.MemberNotEmailAuthException;
 import com.domo.lms.entity.Member;
+import com.domo.lms.mapper.MemberMapper;
+import com.domo.lms.model.MemberDto;
 import com.domo.lms.model.MemberInput;
+import com.domo.lms.model.MemberParam;
 import com.domo.lms.model.ResetPasswordInput;
 import com.domo.lms.repository.MemberRepository;
 import com.domo.lms.type.ROLE;
@@ -29,6 +32,7 @@ import static com.domo.lms.type.ROLE.*;
 public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final MailUtils mailUtils;
+    private final MemberMapper memberMapper;
 
     @Override
     public boolean register(MemberInput parameter) {
@@ -121,6 +125,12 @@ public class MemberServiceImpl implements MemberService {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public List<MemberDto> list(MemberParam parameter) {
+        List<MemberDto> list = memberMapper.selectList(parameter);
+        return list;
     }
 
     @Override

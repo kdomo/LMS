@@ -1,8 +1,13 @@
 package com.domo.lms.service;
 
+import com.domo.lms.entity.Member;
+import com.domo.lms.model.MemberDto;
 import com.domo.lms.model.MemberInput;
+import com.domo.lms.model.MemberParam;
 import com.domo.lms.model.ResetPasswordInput;
 import org.springframework.security.core.userdetails.UserDetailsService;
+
+import java.util.List;
 
 public interface MemberService extends UserDetailsService {
     boolean register(MemberInput parameter);
@@ -12,4 +17,7 @@ public interface MemberService extends UserDetailsService {
     boolean resetPassword(String uuid, String password);
 
     boolean checkResetPassword(String uuid);
+
+    List<MemberDto>list(MemberParam parameter);
+
 }

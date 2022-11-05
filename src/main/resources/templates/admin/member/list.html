@@ -3,6 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>관리자 화면</title>
+    <style>
+        .list table {
+            width: 100%;
+            border-collapse: collapse;
+
+        }
+        .list table th, .list table td {
+            border: 1px solid #000;
+        }
+    </style>
 </head>
 <body>
     <h1>관리자 회원 관리</h1>
@@ -16,6 +26,46 @@
         <a  href="#">강의 관리</a>
         |
         <a  href="/member/logout">로그아웃</a>
+        <br/>
+        <hr/>
+    </div>
+    <div class="list">
+        <form method="get">
+            <select name="searchType">
+                <option th:selected="${#strings.equals(param.searchType, 'all')}" value="all">전체</option>
+                <option th:selected="${#strings.equals(param.searchType, 'userId')}" value="userId">아이디</option>
+                <option th:selected="${#strings.equals(param.searchType, 'userName')}" value="userName">이름</option>
+                <option th:selected="${#strings.equals(param.searchType, 'phone')}" value="phone">연락처</option>
+            </select>
+            <input th:value="${param.searchValue}" type="search" name="searchValue"/>
+            <button type="submit">검색</button>
+        </form>
+
+        <table >
+            <thead>
+                <tr>
+                    <th>NO</th>
+                    <th>아이디</th>
+                    <th>이름</th>
+                    <th>연락처</th>
+                    <th>이메일 인증 여부</th>
+                    <th>가입일</th>
+                    <th>회원 구분</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="x ,i : ${list}">
+                    <td th:text="${i.index+1}">1</td>
+                    <td th:text="${x.userId}">test@naver.com</td>
+                    <td th:text="${x.userName}">홍길동</td>
+                    <td th:text="${x.phone}">010-1111-1111</td>
+                    <td th:if="${x.emailAuthYn}">Y</td>
+                    <td th:if="${!x.emailAuthYn}">N</td>
+                    <td th:text="${x.regDt}">2021.08.07</td>
+                    <td th:text="${x.role}">USER</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </body>
 </html>
