@@ -2,6 +2,7 @@ package com.domo.lms.model;
 
 import com.domo.lms.entity.Member;
 import com.domo.lms.type.ROLE;
+import com.domo.lms.type.UserStatus;
 import lombok.*;
 
 import javax.persistence.EnumType;
@@ -39,6 +40,8 @@ public class MemberDto {
     @Enumerated(EnumType.STRING)
     private ROLE role;
 
+    private UserStatus userStatus;
+
     long totalCount;
 
     public static MemberDto of(Member member) {
@@ -53,6 +56,7 @@ public class MemberDto {
                 .resetPasswordKey(member.getResetPasswordKey())
                 .resetPasswordLimitDt(member.getResetPasswordLimitDt())
                 .role(member.getRole())
+                .userStatus(member.getUserStatus())
                 .build();
     }
 }

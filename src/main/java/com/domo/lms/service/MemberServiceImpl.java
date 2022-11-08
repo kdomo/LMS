@@ -2,6 +2,7 @@ package com.domo.lms.service;
 
 import com.domo.lms.exception.MemberNotEmailAuthException;
 import com.domo.lms.entity.Member;
+import com.domo.lms.exception.MemberUnAvailableException;
 import com.domo.lms.mapper.MemberMapper;
 import com.domo.lms.model.MemberDto;
 import com.domo.lms.model.MemberInput;
@@ -9,6 +10,7 @@ import com.domo.lms.model.MemberParam;
 import com.domo.lms.model.ResetPasswordInput;
 import com.domo.lms.repository.MemberRepository;
 import com.domo.lms.type.ROLE;
+import com.domo.lms.type.UserStatus;
 import com.domo.lms.util.MailUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,6 +29,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static com.domo.lms.type.ROLE.*;
+import static com.domo.lms.type.UserStatus.*;
 
 @Service
 @RequiredArgsConstructor
@@ -53,6 +56,7 @@ public class MemberServiceImpl implements MemberService {
                 .emailAuthYn(false)
                 .emailAuthKey(uuid)
                 .role(USER)
+                .userStatus(REQUESTING)
                 .build());
 
         String email = parameter.getUserId();
@@ -78,6 +82,7 @@ public class MemberServiceImpl implements MemberService {
 
         member.setEmailAuthYn(true);
         member.setEmailAuthDt(LocalDateTime.now());
+        member.setUserStatus(AVAILABLE);
         memberRepository.save(member);
         return true;
     }
@@ -148,14 +153,37 @@ public class MemberServiceImpl implements MemberService {
         return MemberDto.of(member);
     }
 
+
+    public boolean updateStatus(String userId, UserStatus userStatus) {
+        Member member = memberRepository.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("회원 정보 존재하지 않음"));
+        member.setUserStatus(userStatus);
+        memberRepository.save(member);
+        return true;
+    }
+
+    @Override
+    public boolean updatePassword(String userId, String password) {
+        Member member = memberRepository.findById(userId)
+            .orElseThrow(() -> new UsernameNotFoundException("회원 정보 존재하지 않음"));
+
+        String encPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+        member.setPassword(encPassword);
+        memberRepository.save(member);
+        return true;
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         Member member = memberRepository.findById(username)
                 .orElseThrow(() -> new UsernameNotFoundException("회원 정보가 존재하지 않습니다."));
 
-        if (!member.isEmailAuthYn()) {
+        if (member.getUserStatus() == REQUESTING) {
             throw new MemberNotEmailAuthException("이메일 활성화 이후에 로그인을 해주세요.");
+        }
+        if (member.getUserStatus() == UNAVAILABLE) {
+            throw new MemberUnAvailableException("정지된 회원 입니다.");
         }
 
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();

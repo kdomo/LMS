@@ -1,6 +1,7 @@
 package com.domo.lms.entity;
 
 import com.domo.lms.type.ROLE;
+import com.domo.lms.type.UserStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -42,4 +43,7 @@ public class Member {
 
     @Enumerated(EnumType.STRING)
     private ROLE role;
+
+    @Enumerated(EnumType.STRING)
+    private UserStatus userStatus;
 }

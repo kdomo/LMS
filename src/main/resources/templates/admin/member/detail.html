@@ -56,6 +56,37 @@
                     <th>회원 구분</th>
                     <td th:text="${member.role}"></td>
                 </tr>
+                <tr>
+                    <th>회원 상태</th>
+                    <td>
+                        <p>
+                            현재 상태 : <span th:text="${member.userStatus}"></span>
+                        </p>
+                        <div>
+                            <form method="post" action="/admin/member/status">
+                                <input type="hidden" name="userId" th:value="${member.userId}"/>
+                                <select name="userStatus">
+                                    <option value="REQUESTING">가입승인중</option>
+                                    <option value="AVAILABLE">정상이용중</option>
+                                    <option value="UNAVAILABLE">정지</option>
+                                </select>
+                                <button type="submit">상태 변경</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>비밀번호 초기화</th>
+                    <td>
+                        <div>
+                            <form method="post" action="/admin/member/password">
+                                <input type="hidden" name="userId" th:value="${member.userId}"/>
+                                <input type="text" name="password"/>
+                                <button type="submit">비밀번호 초기화</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
            </tbody>
        </table>
        <div>

@@ -5,6 +5,7 @@ import com.domo.lms.model.MemberDto;
 import com.domo.lms.model.MemberInput;
 import com.domo.lms.model.MemberParam;
 import com.domo.lms.model.ResetPasswordInput;
+import com.domo.lms.type.UserStatus;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
@@ -21,4 +22,8 @@ public interface MemberService extends UserDetailsService {
     List<MemberDto>list(MemberParam parameter);
 
     MemberDto detail(String userId);
+
+    boolean updateStatus(String userId, UserStatus userStatus);
+
+    boolean updatePassword(String userId, String password);
 }
