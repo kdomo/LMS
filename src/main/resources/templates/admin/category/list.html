@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>관리자 화면</title>
+    <style>
+        .list table {
+            width: 100%;
+            border-collapse: collapse;
+
+        }
+
+        .list table th, .list table td {
+            border: 1px solid #000;
+        }
+        .noting{
+            text-align: center;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+</head>
+<body>
+<h1>관리자 카테고리 관리</h1>
+<div th:replace="/fragments/layout.html :: fragment-admin-body-menu"></div>
+<div class="list">
+    <table>
+        <div>
+            <form method="post" action="/admin/category/add">
+                <input type="text" name="categoryName" required placeholder="카테고리 명">
+                <button type="submit">추가</button>
+            </form>
+        </div>
+
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>카테고리명</th>
+                <th>순서</th>
+                <th>사용여부</th>
+                <th>삭제</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="x : ${list}">
+                <td th:text="${x.id}">1</td>
+                <td th:text="${x.categoryName}">카테고리명</td>
+                <td th:text="${x.sortValue}">순서</td>
+                <td th:text="${x.usingYn}">사용여부</td>
+                <td>
+                    <form method="post" action="/admin/category/delete">
+                        <input type="hidden" name="id" th:value="${x.id}">
+                        <button type="submit">삭제</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${empty list}">
+                <td colspan="5" class="noting">
+                    내용이 없습니다.
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
