@@ -23,4 +23,11 @@ public class AdminMemberController {
         model.addAttribute("list", list);
         return "admin/member/list";
     }
+
+    @GetMapping("/detail")
+    public String detail(Model model, String userId) {
+        MemberDto member = memberService.detail(userId);
+        model.addAttribute("member", member);
+        return "admin/member/detail";
+    }
 }

@@ -56,7 +56,7 @@
             <tbody>
                 <tr th:each="x ,i : ${list}">
                     <td th:text="${i.index+1}">1</td>
-                    <td th:text="${x.userId}">test@naver.com</td>
+                    <td><a th:text="${x.userId}" th:href="${'detail?userId=' + x.userId}">test@naver.com</a></td>
                     <td th:text="${x.userName}">홍길동</td>
                     <td th:text="${x.phone}">010-1111-1111</td>
                     <td th:if="${x.emailAuthYn}">Y</td>

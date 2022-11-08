@@ -20,4 +20,5 @@ public interface MemberService extends UserDetailsService {
 
     List<MemberDto>list(MemberParam parameter);
 
+    MemberDto detail(String userId);
 }

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>관리자 화면</title>
+    <style>
+        .detail table {
+            width: 100%;
+            border-collapse: collapse;
+
+        }
+        .detail table th, .detail table td {
+            border: 1px solid #000;
+        }
+    </style>
+</head>
+<body>
+    <h1>관리자 회원 관리 - 회원 상세 정보</h1>
+    <div>
+        <a  href="/admin/index">관리자 메인</a>
+        |
+        <a  href="/admin/member/list">회원 관리</a>
+        |
+        <a  href="#">카테고리 관리</a>
+        |
+        <a  href="#">강의 관리</a>
+        |
+        <a  href="/member/logout">로그아웃</a>
+        <br/>
+        <hr/>
+    </div>
+   <div class="detail">
+       <table>
+           <tbody>
+                <tr>
+                    <th>아이디</th>
+                    <td th:text="${member.userId}"></td>
+                </tr>
+                <tr>
+                    <th>이름</th>
+                    <td th:text="${member.userName}"></td>
+                </tr>
+                <tr>
+                    <th>연락처</th>
+                    <td th:text="${member.phone}"></td>
+                </tr>
+                <tr>
+                    <th>가입일</th>
+                    <td th:text="${member.regDt}"></td>
+                </tr>
+                <tr>
+                    <th>이메일 인증</th>
+                    <td th:text="${member.emailAuthYn}"></td>
+                </tr>
+                <tr>
+                    <th>회원 구분</th>
+                    <td th:text="${member.role}"></td>
+                </tr>
+           </tbody>
+       </table>
+       <div>
+           <a href="list">목록으로 이동</a>
+       </div>
+   </div>
+</body>
+</html>

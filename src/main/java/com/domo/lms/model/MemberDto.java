@@ -1,8 +1,8 @@
 package com.domo.lms.model;
 
+import com.domo.lms.entity.Member;
 import com.domo.lms.type.ROLE;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -10,6 +10,10 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@ToString
 public class MemberDto {
     private String userId;
 
@@ -34,4 +38,21 @@ public class MemberDto {
 
     @Enumerated(EnumType.STRING)
     private ROLE role;
+
+    long totalCount;
+
+    public static MemberDto of(Member member) {
+        return MemberDto.builder()
+                .userId(member.getUserId())
+                .userName(member.getUserName())
+                .phone(member.getPhone())
+                .regDt(member.getRegDt())
+                .emailAuthYn(member.isEmailAuthYn())
+                .emailAuthDt(member.getEmailAuthDt())
+                .emailAuthKey(member.getEmailAuthKey())
+                .resetPasswordKey(member.getResetPasswordKey())
+                .resetPasswordLimitDt(member.getResetPasswordLimitDt())
+                .role(member.getRole())
+                .build();
+    }
 }
