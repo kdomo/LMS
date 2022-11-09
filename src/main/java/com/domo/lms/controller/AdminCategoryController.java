@@ -36,4 +36,10 @@ public class AdminCategoryController {
         boolean result = categoryService.delete(parameter.getId());
         return "redirect:/admin/category/list";
     }
+
+    @PostMapping("/update")
+    public String update(Model model, CategoryInput parameter) {
+        boolean result = categoryService.update(parameter);
+        return "redirect:/admin/category/list";
+    }
 }
