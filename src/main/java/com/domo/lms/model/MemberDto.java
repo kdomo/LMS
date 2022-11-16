@@ -44,6 +44,8 @@ public class MemberDto {
 
     long totalCount;
 
+    long seq;
+
     public static MemberDto of(Member member) {
         return MemberDto.builder()
                 .userId(member.getUserId())

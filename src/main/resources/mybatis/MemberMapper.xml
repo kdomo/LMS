@@ -61,6 +61,6 @@
             </choose>
         </if>
 
-        limit 0, 10
+        limit #{pageStart}, #{pageEnd}
     </select>
 </mapper>

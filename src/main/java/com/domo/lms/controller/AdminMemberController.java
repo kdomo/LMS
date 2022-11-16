@@ -5,6 +5,7 @@ import com.domo.lms.model.MemberDto;
 import com.domo.lms.model.MemberParam;
 import com.domo.lms.model.MemberStatusInput;
 import com.domo.lms.service.MemberService;
+import com.domo.lms.util.PageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,8 +22,20 @@ public class AdminMemberController {
     private final MemberService memberService;
     @GetMapping("/list")
     public String list(Model model, MemberParam parameter) {
+        parameter.init();
+
         List<MemberDto> list = memberService.list(parameter);
         model.addAttribute("list", list);
+
+        long totalCount = 0;
+        if (list != null && list.size() > 0) {
+            totalCount = list.get(0).getTotalCount();
+        }
+        String queryString = parameter.getQueryString();
+
+        PageUtil pageUtil = new PageUtil(totalCount, parameter.getPageSize(), parameter.getPageIndex(), queryString);
+        model.addAttribute("totalCount", totalCount);
+        model.addAttribute("pager", pageUtil.pager());
         return "admin/member/list";
     }
 
