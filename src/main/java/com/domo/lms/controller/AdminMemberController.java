@@ -18,7 +18,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/admin/member")
 @RequiredArgsConstructor
-public class AdminMemberController {
+public class AdminMemberController extends BaseController{
     private final MemberService memberService;
     @GetMapping("/list")
     public String list(Model model, MemberParam parameter) {
@@ -33,9 +33,10 @@ public class AdminMemberController {
         }
         String queryString = parameter.getQueryString();
 
-        PageUtil pageUtil = new PageUtil(totalCount, parameter.getPageSize(), parameter.getPageIndex(), queryString);
+        String pagerHtml = getPagerHtml(totalCount, parameter.getPageSize(), parameter.getPageIndex(), queryString);;
+
         model.addAttribute("totalCount", totalCount);
-        model.addAttribute("pager", pageUtil.pager());
+        model.addAttribute("pager", pagerHtml);
         return "admin/member/list";
     }
 
