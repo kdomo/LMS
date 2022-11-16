@@ -5,13 +5,14 @@ import com.domo.lms.mapper.CourseMapper;
 import com.domo.lms.model.CourseDto;
 import com.domo.lms.model.CourseInput;
 import com.domo.lms.model.CourseParam;
-import com.domo.lms.model.MemberDto;
 import com.domo.lms.repository.CourseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,10 +22,29 @@ public class CourseServiceImpl implements CourseService {
     private final CourseRepository courseRepository;
     private final CourseMapper courseMapper;
 
+    private LocalDate getLocalDate(String value) {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            return LocalDate.parse(value, formatter);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     @Override
     public boolean add(CourseInput courseInput) {
+        LocalDate seleEndDt = getLocalDate(courseInput.getSaleEndDtText());
+
         Course course = Course.builder()
+                .categoryId(courseInput.getCategoryId())
                 .subject(courseInput.getSubject())
+                .keyword(courseInput.getKeyword())
+                .summary(courseInput.getSummary())
+                .contents(courseInput.getContents())
+                .price(courseInput.getPrice())
+                .salePrice(courseInput.getSalePrice())
+                .saleEndDt(seleEndDt)
                 .regDt(LocalDateTime.now())
                 .build();
         courseRepository.save(course);
@@ -33,13 +53,22 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public boolean set(CourseInput parameter) {
+        LocalDate seleEndDt = getLocalDate(parameter.getSaleEndDtText());
+
         Optional<Course> optionalCourse = courseRepository.findById(parameter.getId());
         if (!optionalCourse.isPresent()) {
             return false;
         }
 
         Course course = optionalCourse.get();
-        course.setSubject(parameter.getSubject());;
+        course.setCategoryId(parameter.getCategoryId());
+        course.setSubject(parameter.getSubject());
+        course.setKeyword(parameter.getKeyword());
+        course.setSummary(parameter.getSummary());
+        course.setContents(parameter.getContents());
+        course.setPrice(parameter.getPrice());
+        course.setSalePrice(parameter.getSalePrice());
+        course.setSaleEndDt(seleEndDt);
         course.setUpDt(LocalDateTime.now());
 
         courseRepository.save(course);

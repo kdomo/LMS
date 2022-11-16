@@ -4,6 +4,7 @@ import com.domo.lms.model.CourseDto;
 import com.domo.lms.model.CourseInput;
 import com.domo.lms.model.CourseParam;
 import com.domo.lms.model.MemberDto;
+import com.domo.lms.service.CategoryService;
 import com.domo.lms.service.CourseService;
 import com.domo.lms.util.PageUtil;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminCourseController extends BaseController {
     private final CourseService courseService;
+    private final CategoryService categoryService;
 
     @GetMapping("/list")
     public String list(Model model, CourseParam parameter) {
@@ -48,6 +50,9 @@ public class AdminCourseController extends BaseController {
 
     @GetMapping({"/add", "/edit"})
     public String add(Model model, HttpServletRequest request, CourseInput parameter) {
+        model.addAttribute("categoryList", categoryService.list());
+
+
         boolean editMode = request.getRequestURI().contains("/edit");
         CourseDto detail = new CourseDto();
 

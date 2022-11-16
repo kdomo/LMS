@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -17,6 +18,8 @@ public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private Long categoryId;
 
     private String imagePath;
 
@@ -32,7 +35,7 @@ public class Course {
 
     private long price;
     private long salePrice;
-    private LocalDateTime saleEndDt;
+    private LocalDate saleEndDt;
     private LocalDateTime regDt;
     private LocalDateTime upDt;
 

@@ -41,7 +41,7 @@
         select * from course
         where 1=1
         <include refid="selectListWhere"/>
-
+        order by course.reg_dt desc
         limit #{pageStart}, #{pageEnd}
     </select>
 </mapper>
