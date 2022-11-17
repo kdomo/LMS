@@ -38,12 +38,12 @@ public class AdminCourseController extends BaseController {
         }
         String queryString = parameter.getQueryString();
 
-        String pagerHtml = getPagerHtml(totalCount, parameter.getPageSize(), parameter.getPageIndex(), queryString);
+        String pager = getPagerHtml(totalCount, parameter.getPageSize(), parameter.getPageIndex(), queryString);
 
 
         model.addAttribute("list", list);
         model.addAttribute("totalCount", totalCount);
-        model.addAttribute("pager", pagerHtml);
+        model.addAttribute("pager", pager);
 
         return "admin/course/list";
     }

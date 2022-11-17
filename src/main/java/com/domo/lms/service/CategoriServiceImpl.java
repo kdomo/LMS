@@ -2,6 +2,7 @@ package com.domo.lms.service;
 
 import com.domo.lms.entity.Category;
 import com.domo.lms.exception.CategoryNoyFoundException;
+import com.domo.lms.mapper.CategoryMapper;
 import com.domo.lms.model.CategoryDto;
 import com.domo.lms.model.CategoryInput;
 import com.domo.lms.repository.CategoryRepository;
@@ -16,18 +17,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CategoriServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
+    private final CategoryMapper categoryMapper;
 
     @Override
     public List<CategoryDto> list() {
         Sort sort = Sort.by(Sort.Direction.DESC, "sortValue");
-        List<CategoryDto> list = categoryRepository.findAll(sort).stream()
-                .map((category) -> new CategoryDto(
-                        category.getId(),
-                        category.getCategoryName(),
-                        category.getSortValue(),
-                        category.isUsingYn()))
-                .collect(Collectors.toList());
-        return list;
+        List<Category> list = categoryRepository.findAll(sort);
+        return CategoryDto.of(list);
     }
 
     @Override
@@ -41,10 +37,6 @@ public class CategoriServiceImpl implements CategoryService {
         return false;
     }
 
-    @Override
-    public boolean update(CategoryDto categoryDto) {
-        return false;
-    }
 
     @Override
     public boolean delete(long id) {
@@ -61,5 +53,10 @@ public class CategoriServiceImpl implements CategoryService {
         category.setUsingYn(categoryInput.isUsingYn());
         categoryRepository.save(category);
         return true;
+    }
+
+    @Override
+    public List<CategoryDto> frontList(CategoryDto parameter) {
+        return categoryMapper.select(parameter);
     }
 }

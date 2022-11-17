@@ -43,6 +43,14 @@
             color: #000;
             cursor: pointer;
         }
+        .pager {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .pager a.on {
+            font-weight: bold;
+            color: red;
+        }
     </style>
     <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
     <script>
@@ -79,8 +87,8 @@
     </script>
 </head>
 <body>
-    <h1>강좌 관리</h1>
     <div th:replace="/fragments/layout.html :: fragment-admin-body-menu"></div>
+    <h1>강좌 관리</h1>
 
 
     <div class="list">
@@ -109,6 +117,9 @@
                 </tr>
             </tbody>
         </table>
+        <div class="pager" th:utext="${pager}">
+
+        </div>
     </div>
     <form method="post" name="deleteForm" action="/admin/course/delete">
         <input type="hidden" name="idList">

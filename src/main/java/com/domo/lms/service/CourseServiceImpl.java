@@ -13,6 +13,7 @@ import org.springframework.util.CollectionUtils;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -118,5 +119,19 @@ public class CourseServiceImpl implements CourseService {
 
     }
 
+    @Override
+    public List<CourseDto> frontList(CourseParam parameter) {
+        if (parameter.getCategoryId() < 1) {
+            List<Course> list = courseRepository.findAll();
+            return CourseDto.of(list);
+        }
+
+        Optional<List<Course>> optionalList = courseRepository.findByCategoryId(parameter.getCategoryId());
+        if (optionalList.isPresent()) {
+            return CourseDto.of(optionalList.get());
+        }
+
+        return new ArrayList<>();
+    }
 
 }

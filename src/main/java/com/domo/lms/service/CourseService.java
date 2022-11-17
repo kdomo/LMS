@@ -33,4 +33,9 @@ public interface CourseService {
     * 강좌 내용 삭제
     * */
     boolean delete(String idList);
+
+    /*
+    *
+    * */
+    List<CourseDto> frontList(CourseParam parameter);
 }
