@@ -28,4 +28,9 @@ public interface CourseService {
      */
 
     boolean set(CourseInput parameter);
+
+    /*
+    * 강좌 내용 삭제
+    * */
+    boolean delete(String idList);
 }

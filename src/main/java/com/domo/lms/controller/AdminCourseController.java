@@ -33,7 +33,7 @@ public class AdminCourseController extends BaseController {
         List<CourseDto> list = courseService.list(parameter);
 
         long totalCount = 0;
-        if (CollectionUtils.isEmpty(list)) {
+        if (!CollectionUtils.isEmpty(list)) {
             totalCount = list.get(0).getTotalCount();
         }
         String queryString = parameter.getQueryString();
@@ -94,6 +94,12 @@ public class AdminCourseController extends BaseController {
             boolean result = courseService.add(parameter);
         }
 
+        return "redirect:/admin/course/list";
+    }
+
+    @PostMapping("/delete")
+    public String delete(Model model, CourseInput parameter, HttpServletRequest request) {
+        boolean result = courseService.delete(parameter.getIdList());
         return "redirect:/admin/course/list";
     }
 }
