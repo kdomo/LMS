@@ -49,7 +49,8 @@ public class SecurityConfig {
 
         http
                 .cors().disable()
-
+                .headers().frameOptions().sameOrigin()
+                .and()
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/",
