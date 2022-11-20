@@ -1,11 +1,11 @@
 package com.domo.lms.service;
 
 import com.domo.lms.entity.Course;
+import com.domo.lms.entity.TakeCourse;
 import com.domo.lms.mapper.CourseMapper;
-import com.domo.lms.model.CourseDto;
-import com.domo.lms.model.CourseInput;
-import com.domo.lms.model.CourseParam;
+import com.domo.lms.model.*;
 import com.domo.lms.repository.CourseRepository;
+import com.domo.lms.repository.TakeCourseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +23,7 @@ import java.util.Optional;
 public class CourseServiceImpl implements CourseService {
     private final CourseRepository courseRepository;
     private final CourseMapper courseMapper;
+    private final TakeCourseRepository takeCourseRepository;
 
     private LocalDate getLocalDate(String value) {
         try {
@@ -132,6 +134,49 @@ public class CourseServiceImpl implements CourseService {
         }
 
         return new ArrayList<>();
+    }
+
+    @Override
+    public CourseDto frontDetail(long id) {
+        Optional<Course> optionalCourse = courseRepository.findById(id);
+
+        if(optionalCourse.isPresent()) {
+            return CourseDto.of(optionalCourse.get());
+        }
+
+        return CourseDto.builder().build();
+    }
+
+    @Override
+    public ServiceReslut req(TakeCourseInput parameter) {
+        ServiceReslut reslut = new ServiceReslut();
+        Optional<Course> optionalCourse = courseRepository.findById(parameter.getCourseId());
+        if (!optionalCourse.isPresent()) {
+            reslut.setReslut(false);
+            reslut.setMessage("강좌 정보가 존재하지 않습니다.");
+            return reslut;
+        }
+
+        Course course = optionalCourse.get();
+
+        String[] statusList = {TakeCourse.STATUS_REQ, TakeCourse.STATUS_COMPLETE};
+        long count = takeCourseRepository.countByCourseIdAndUserIdAndStatusIn(course.getId(), parameter.getUserId(), Arrays.asList(statusList));
+        if (count > 0) {
+            reslut.setReslut(false);
+            reslut.setMessage("이미 신청한 강좌 정보가 존재합니다.");
+            return reslut;
+        }
+        TakeCourse takeCourse = TakeCourse.builder()
+                .courseId(course.getId())
+                .userId(parameter.getUserId())
+                .payPrice(course.getSalePrice())
+                .status(TakeCourse.STATUS_REQ)
+                .regDt(LocalDateTime.now())
+                .build();
+        takeCourseRepository.save(takeCourse);
+
+        reslut.setReslut(true);
+        return reslut;
     }
 
 }
