@@ -27,4 +27,15 @@
         order by reg_dt desc
         limit #{pageStart}, #{pageEnd}
     </select>
+
+    <!-- userId에 해당하는 수강신청 내역을 가져옴 -->
+    <select id="selectListMyCourse" resultType="com.domo.lms.model.TakeCourseDto">
+        select tc.*
+        , c.subject
+        from take_course tc
+        join course c on tc.course_id = c.id
+        where tc.user_id = #{userId}
+        <include refid="selectListWhere"/>
+        order by reg_dt desc
+    </select>
 </mapper>

@@ -6,4 +6,6 @@ import lombok.Data;
 public class TakeCourseInput{
     private String userId;
     private long courseId;
+
+    private long takeCourseId;
 }

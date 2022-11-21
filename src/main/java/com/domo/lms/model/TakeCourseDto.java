@@ -1,6 +1,10 @@
 package com.domo.lms.model;
 
+import com.domo.lms.entity.TakeCourse;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.text.DecimalFormat;
@@ -8,6 +12,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class TakeCourseDto {
 
     private Long id;
@@ -27,6 +34,18 @@ public class TakeCourseDto {
 
     private long totalCount;
     private long seq;
+
+    public static TakeCourseDto of(TakeCourse takeCourse) {
+        return TakeCourseDto.builder()
+                .id(takeCourse.getCourseId())
+                .courseId(takeCourse.getCourseId())
+                .userId(takeCourse.getUserId())
+                .payPrice(takeCourse.getPayPrice())
+                .status(takeCourse.getStatus())
+                .regDt(takeCourse.getRegDt())
+                .build();
+
+    }
 
     public String getRegDtText() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");

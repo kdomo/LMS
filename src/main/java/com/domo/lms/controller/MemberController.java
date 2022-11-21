@@ -1,12 +1,10 @@
 package com.domo.lms.controller;
 
 import com.domo.lms.entity.Member;
-import com.domo.lms.model.MemberDto;
-import com.domo.lms.model.MemberInput;
-import com.domo.lms.model.ResetPasswordInput;
-import com.domo.lms.model.ServiceResult;
+import com.domo.lms.model.*;
 import com.domo.lms.repository.MemberRepository;
 import com.domo.lms.service.MemberService;
+import com.domo.lms.service.TakeCourseService;
 import com.domo.lms.util.MailUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -19,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Controller
 @RequestMapping("/member")
@@ -26,6 +25,7 @@ import java.time.LocalDateTime;
 public class MemberController {
 
     private final MemberService memberService;
+    private final TakeCourseService takeCourseService;
 
     @RequestMapping("/login")
     public String login() {
@@ -107,7 +107,10 @@ public class MemberController {
     public String memberTakeCourse(Model model, Principal principal) {
         String userId = principal.getName();
         MemberDto detail = memberService.detail(userId);
+
+        List<TakeCourseDto> list = takeCourseService.myCourse(userId);
         model.addAttribute("detail", detail);
+        model.addAttribute("list", list);
         return "member/takecourse";
     }
 

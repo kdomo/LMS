@@ -6,4 +6,5 @@ import lombok.Data;
 public class TakeCourseParam extends CommonParam {
     private long id;
     private String status;
+    private String userId;
 }
