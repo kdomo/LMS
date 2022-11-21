@@ -8,6 +8,7 @@ import lombok.*;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @Setter
@@ -25,6 +26,7 @@ public class MemberDto {
     private String password;
 
     private LocalDateTime regDt;
+    private LocalDateTime uptDt;
 
 
     private boolean emailAuthYn;
@@ -52,6 +54,7 @@ public class MemberDto {
                 .userName(member.getUserName())
                 .phone(member.getPhone())
                 .regDt(member.getRegDt())
+                .uptDt(member.getUptDt())
                 .emailAuthYn(member.isEmailAuthYn())
                 .emailAuthDt(member.getEmailAuthDt())
                 .emailAuthKey(member.getEmailAuthKey())
@@ -60,5 +63,15 @@ public class MemberDto {
                 .role(member.getRole())
                 .userStatus(member.getUserStatus())
                 .build();
+    }
+
+    public String getRegDtText() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss");
+        return regDt != null ? regDt.format(formatter) : "";
+    }
+
+    public String getUptDtText() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss");
+        return uptDt != null ? uptDt.format(formatter) : "";
     }
 }

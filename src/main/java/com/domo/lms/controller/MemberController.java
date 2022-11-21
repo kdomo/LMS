@@ -1,8 +1,10 @@
 package com.domo.lms.controller;
 
 import com.domo.lms.entity.Member;
+import com.domo.lms.model.MemberDto;
 import com.domo.lms.model.MemberInput;
 import com.domo.lms.model.ResetPasswordInput;
+import com.domo.lms.model.ServiceResult;
 import com.domo.lms.repository.MemberRepository;
 import com.domo.lms.service.MemberService;
 import com.domo.lms.util.MailUtils;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.security.Principal;
 import java.time.LocalDateTime;
 
 @Controller
@@ -61,8 +64,51 @@ public class MemberController {
     }
 
     @GetMapping("/info")
-    public String memberInfo() {
+    public String memberInfo(Model model, Principal principal) {
+        String userId = principal.getName();
+        MemberDto detail = memberService.detail(userId);
+        model.addAttribute("detail", detail);
         return "member/info";
+    }
+
+    @PostMapping("/info")
+    public String memberInfoSubmit(Model model, MemberInput parameter, Principal principal) {
+        String userId = principal.getName();
+        parameter.setUserId(userId);
+        ServiceResult result = memberService.updateMember(parameter);
+        if (!result.isResult()) {
+            model.addAttribute("message", result.getMessage());
+            return "common/error";
+        }
+        return "redirect:/member/info";
+    }
+
+    @GetMapping("/password")
+    public String memberPassword(Model model, Principal principal) {
+        String userId = principal.getName();
+        MemberDto detail = memberService.detail(userId);
+        model.addAttribute("detail", detail);
+        return "member/password";
+    }
+
+    @PostMapping("/password")
+    public String memberPasswordSubmit(Model model, Principal principal, MemberInput parameter) {
+        String userId = principal.getName();
+        parameter.setUserId(userId);
+        ServiceResult result = memberService.updateMemberPassword(parameter);
+        if (!result.isResult()) {
+            model.addAttribute("message", result.getMessage());
+            return "common/error";
+        }
+        return "redirect:/member/info";
+    }
+
+    @GetMapping("/takecourse")
+    public String memberTakeCourse(Model model, Principal principal) {
+        String userId = principal.getName();
+        MemberDto detail = memberService.detail(userId);
+        model.addAttribute("detail", detail);
+        return "member/takecourse";
     }
 
     @GetMapping("/reset/password")

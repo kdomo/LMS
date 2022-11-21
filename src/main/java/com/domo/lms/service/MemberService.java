@@ -1,10 +1,7 @@
 package com.domo.lms.service;
 
 import com.domo.lms.entity.Member;
-import com.domo.lms.model.MemberDto;
-import com.domo.lms.model.MemberInput;
-import com.domo.lms.model.MemberParam;
-import com.domo.lms.model.ResetPasswordInput;
+import com.domo.lms.model.*;
 import com.domo.lms.type.UserStatus;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -26,4 +23,11 @@ public interface MemberService extends UserDetailsService {
     boolean updateStatus(String userId, UserStatus userStatus);
 
     boolean updatePassword(String userId, String password);
+
+    ServiceResult updateMemberPassword(MemberInput parameter);
+
+    /**
+     * 회원 정보 수정
+     */
+    ServiceResult updateMember(MemberInput parameter);
 }

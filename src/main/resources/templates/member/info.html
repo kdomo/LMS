@@ -3,9 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <title>회원 정보</title>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            $('#updateForm').on('submit', function() {
+                if (!confirm('회원 정보를 수정하시겠습니까?')) {
+                    return false;
+                }
+            })
+        });
+    </script>
 </head>
 <body>
 <h1>회원 정보</h1>
 <div th:replace="/fragments/layout.html :: fragment-body-menu"></div>
+<div>
+    <hr/>
+    <a href="/member/info">회원 정보 수정</a>
+    |
+    <a href="/member/password">비밀번호 수정</a>
+    |
+    <a href="/member/takecourse">내 수강 목록</a>
+</div>
+<div>
+    <form id="updateForm" method="post">
+    <table>
+        <tbody>
+            <tr>
+                <th>아이디(이메일)</th>
+                <td>
+                    <p th:text="${detail.userId}">test@test.com</p>
+                </td>
+            </tr>
+            <tr>
+                <th>이름</th>
+                <td>
+                    <p th:text="${detail.userName}">홍길동</p>
+                </td>
+            </tr>
+            <tr>
+                <th>전화번호</th>
+                <td>
+                    <input type="text" name="phone" th:value="${detail.phone}">
+                </td>
+            </tr>
+            <tr>
+                <th>가입일</th>
+                <td>
+                    <p th:text="${detail.regDtText}">2020.02.02</p>
+                </td>
+            </tr>
+            <tr>
+                <th>회원정보 수정일</th>
+                <td>
+                    <p th:text="${detail.uptDtText}">2020.02.02</p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div>
+        <button type="submit">수정</button>
+    </div>
+    </form>
+</div>
 </body>
 </html>

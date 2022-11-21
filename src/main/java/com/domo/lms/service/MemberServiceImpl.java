@@ -4,10 +4,7 @@ import com.domo.lms.exception.MemberNotEmailAuthException;
 import com.domo.lms.entity.Member;
 import com.domo.lms.exception.MemberUnAvailableException;
 import com.domo.lms.mapper.MemberMapper;
-import com.domo.lms.model.MemberDto;
-import com.domo.lms.model.MemberInput;
-import com.domo.lms.model.MemberParam;
-import com.domo.lms.model.ResetPasswordInput;
+import com.domo.lms.model.*;
 import com.domo.lms.repository.MemberRepository;
 import com.domo.lms.type.ROLE;
 import com.domo.lms.type.UserStatus;
@@ -174,6 +171,41 @@ public class MemberServiceImpl implements MemberService {
         member.setPassword(encPassword);
         memberRepository.save(member);
         return true;
+    }
+
+    @Override
+    public ServiceResult updateMemberPassword(MemberInput parameter) {
+        String userId = parameter.getUserId();
+
+        Optional<Member> optionalMember = memberRepository.findById(userId);
+        if (!optionalMember.isPresent()) {
+            return new ServiceResult(false, "회원 정보가 존재하지 않습니다.");
+        }
+        Member member = optionalMember.get();
+        if (!BCrypt.checkpw(parameter.getPassword(), member.getPassword())) {
+            return new ServiceResult(false, "비밀번호가 일치하지 않습니다.");
+        }
+        String encPassword = BCrypt.hashpw(parameter.getNewPassword(), BCrypt.gensalt());
+        member.setPassword(encPassword);
+        memberRepository.save(member);
+
+        return new ServiceResult(true);
+    }
+
+    @Override
+    public ServiceResult updateMember(MemberInput parameter) {
+        String userId = parameter.getUserId();
+
+        Optional<Member> optionalMember = memberRepository.findById(userId);
+        if (!optionalMember.isPresent()) {
+            return new ServiceResult(false, "회원 정보가 존재하지 않습니다.");
+        }
+        Member member = optionalMember.get();
+        member.setPhone(parameter.getPhone());
+        member.setUptDt(LocalDateTime.now());
+        memberRepository.save(member);
+
+        return new ServiceResult(true);
     }
 
     @Override
