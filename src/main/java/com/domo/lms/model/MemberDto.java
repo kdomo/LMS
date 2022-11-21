@@ -44,6 +44,10 @@ public class MemberDto {
 
     private UserStatus userStatus;
 
+    private String zipCode;
+    private String addr;
+    private String addrDetail;
+
     long totalCount;
 
     long seq;
@@ -62,6 +66,9 @@ public class MemberDto {
                 .resetPasswordLimitDt(member.getResetPasswordLimitDt())
                 .role(member.getRole())
                 .userStatus(member.getUserStatus())
+                .zipCode(member.getZipCode())
+                .addr(member.getAddr())
+                .addrDetail(member.getAddrDetail())
                 .build();
     }
 

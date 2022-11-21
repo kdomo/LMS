@@ -47,4 +47,8 @@ public class Member {
 
     @Enumerated(EnumType.STRING)
     private UserStatus userStatus;
+
+    private String zipCode;
+    private String addr;
+    private String addrDetail;
 }
