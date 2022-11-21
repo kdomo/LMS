@@ -106,12 +106,16 @@
                     <td th:text="${x.userName}">홍길동</td>
                     <td th:text="${x.userId}">test@naver.com</td>
                     <td th:text="${x.phone}">010-2222-2222</td>
-                    <td th:text="${x.status}">결제완료</td>
                     <td>
-                        <p class="row-buttons" th:if="${x.status eq '수강신청'}">
+                        <p th:if="${x.status eq 'REQ'}">수강신청</p>
+                        <p th:if="${x.status eq 'COMPLETE'}">결제완료</p>
+                        <p th:if="${x.status eq 'CANCEL'}">수강취소</p>
+                    </td>
+                    <td>
+                        <p class="row-buttons" th:if="${x.status eq 'REQ'}">
                             <input type="hidden" name="id" th:value="${x.id}">
-                            <button value="결제완료" type="button">결제완료 처리</button>
-                            <button value="수강취소" type="button">수강취소 처리</button>
+                            <button value="COMPLETE" type="button">결제완료 처리</button>
+                            <button value="CANCEL" type="button">수강취소 처리</button>
                         </p>
                     </td>
                 </tr>
