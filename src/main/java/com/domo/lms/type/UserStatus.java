@@ -1,5 +1,5 @@
 package com.domo.lms.type;
 
 public enum UserStatus {
-    REQUESTING, AVAILABLE, UNAVAILABLE
+    REQUESTING, AVAILABLE, UNAVAILABLE, WITHDRAW
 }

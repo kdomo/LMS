@@ -6,6 +6,7 @@ import com.domo.lms.repository.MemberRepository;
 import com.domo.lms.service.MemberService;
 import com.domo.lms.service.TakeCourseService;
 import com.domo.lms.util.MailUtils;
+import com.domo.lms.util.PasswordUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -132,6 +133,24 @@ public class MemberController {
         }
         model.addAttribute("result", result);
         return "member/reset_password_result";
+    }
+
+    @GetMapping("/withdraw")
+    public String memberWithdraw() {
+        return "member/withdraw";
+    }
+
+    @PostMapping("/withdraw")
+    public String memberWithdraw(Model model, Principal principal, MemberInput memberInput) {
+        String userId = principal.getName();
+
+        ServiceResult result = memberService.withdraw(userId, memberInput.getPassword());
+        if (!result.isResult()) {
+            model.addAttribute("message", result.getMessage());
+            return "common/error";
+        }
+
+        return "redirect:/member/logout";
     }
 
 }

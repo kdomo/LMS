@@ -1,6 +1,5 @@
 package com.domo.lms.service;
 
-import com.domo.lms.entity.Member;
 import com.domo.lms.model.*;
 import com.domo.lms.type.UserStatus;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -30,4 +29,9 @@ public interface MemberService extends UserDetailsService {
      * 회원 정보 수정
      */
     ServiceResult updateMember(MemberInput parameter);
+
+    /**
+     * 회원 탈퇴
+     */
+    ServiceResult withdraw(String userId, String password);
 }

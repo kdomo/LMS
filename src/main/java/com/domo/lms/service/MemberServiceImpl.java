@@ -9,6 +9,7 @@ import com.domo.lms.repository.MemberRepository;
 import com.domo.lms.type.ROLE;
 import com.domo.lms.type.UserStatus;
 import com.domo.lms.util.MailUtils;
+import com.domo.lms.util.PasswordUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -182,10 +183,11 @@ public class MemberServiceImpl implements MemberService {
             return new ServiceResult(false, "회원 정보가 존재하지 않습니다.");
         }
         Member member = optionalMember.get();
-        if (!BCrypt.checkpw(parameter.getPassword(), member.getPassword())) {
+
+        if (PasswordUtil.equals(parameter.getPassword(), member.getPassword())) {
             return new ServiceResult(false, "비밀번호가 일치하지 않습니다.");
         }
-        String encPassword = BCrypt.hashpw(parameter.getNewPassword(), BCrypt.gensalt());
+        String encPassword = PasswordUtil.encPassword(parameter.getNewPassword());
         member.setPassword(encPassword);
         memberRepository.save(member);
 
@@ -212,6 +214,36 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    public ServiceResult withdraw(String userId, String password) {
+        Optional<Member> optionalMember = memberRepository.findById(userId);
+        if (!optionalMember.isPresent()) {
+            return new ServiceResult(false, "회원 정보가 존재하지 않습니다.");
+        }
+        Member member = optionalMember.get();
+
+        if (PasswordUtil.equals(password, member.getPassword())) {
+            return new ServiceResult(false, "비밀번호가 일치하지 않습니다.");
+        }
+
+        member.setUserName("삭제회원");
+        member.setPhone("");
+        member.setPassword("");
+        member.setRegDt(null);
+        member.setUptDt(null);
+        member.setEmailAuthYn(false);
+        member.setEmailAuthDt(null);
+        member.setEmailAuthKey("");
+        member.setResetPasswordKey("");
+        member.setResetPasswordLimitDt(null);
+        member.setUserStatus(WITHDRAW);
+        member.setZipCode("");
+        member.setAddr("");
+        member.setAddrDetail("");
+        memberRepository.save(member);
+        return new ServiceResult(true);
+    }
+
+    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         Member member = memberRepository.findById(username)
@@ -222,6 +254,9 @@ public class MemberServiceImpl implements MemberService {
         }
         if (member.getUserStatus() == UNAVAILABLE) {
             throw new MemberUnAvailableException("정지된 회원 입니다.");
+        }
+        if (member.getUserStatus() == WITHDRAW) {
+            throw new MemberUnAvailableException("탈퇴된 회원 입니다.");
         }
 
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
