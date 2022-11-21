@@ -148,11 +148,11 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public ServiceReslut req(TakeCourseInput parameter) {
-        ServiceReslut reslut = new ServiceReslut();
+    public ServiceResult req(TakeCourseInput parameter) {
+        ServiceResult reslut = new ServiceResult();
         Optional<Course> optionalCourse = courseRepository.findById(parameter.getCourseId());
         if (!optionalCourse.isPresent()) {
-            reslut.setReslut(false);
+            reslut.setResult(false);
             reslut.setMessage("강좌 정보가 존재하지 않습니다.");
             return reslut;
         }
@@ -162,7 +162,7 @@ public class CourseServiceImpl implements CourseService {
         String[] statusList = {TakeCourse.STATUS_REQ, TakeCourse.STATUS_COMPLETE};
         long count = takeCourseRepository.countByCourseIdAndUserIdAndStatusIn(course.getId(), parameter.getUserId(), Arrays.asList(statusList));
         if (count > 0) {
-            reslut.setReslut(false);
+            reslut.setResult(false);
             reslut.setMessage("이미 신청한 강좌 정보가 존재합니다.");
             return reslut;
         }
@@ -175,7 +175,7 @@ public class CourseServiceImpl implements CourseService {
                 .build();
         takeCourseRepository.save(takeCourse);
 
-        reslut.setReslut(true);
+        reslut.setResult(true);
         return reslut;
     }
 

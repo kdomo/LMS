@@ -46,5 +46,5 @@ public interface CourseService {
      * 프론트 - 수강신청
      *
      */
-    ServiceReslut req(TakeCourseInput parameter);
+    ServiceResult req(TakeCourseInput parameter);
 }
