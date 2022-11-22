@@ -53,6 +53,9 @@
         <p>정상가: <span th:text="${detail.price}">0</span></p>
         <p>판매가: <span th:text="${detail.salePrice}">0</span></p>
     </div>
+    <div>
+        <img th:src="${detail.fileUrl}">
+    </div>
 
     <div>
         <form id="submitForm" method="post">
