@@ -21,9 +21,9 @@ public class UserAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         String ip = request.getRemoteAddr();
         String userAgent = request.getHeader("user-agent");
-        String userName = authentication.getName();
+        String userId = authentication.getName();
         memberLogRepository.save(MemberLog.builder()
-                .userName(userName)
+                .userId(userId)
                 .ip(ip)
                 .agent(userAgent)
                 .accessDate(LocalDateTime.now())

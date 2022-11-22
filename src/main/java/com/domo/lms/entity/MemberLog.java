@@ -20,7 +20,7 @@ public class MemberLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String userName;
+    private String userId;
     private LocalDateTime accessDate;
     private String ip;
     private String agent;

@@ -80,6 +80,26 @@
        <div>
            <a href="list">목록으로 이동</a>
        </div>
+       <div>
+           <table>
+               <thead>
+                   <tr>
+                       <th>No</th>
+                       <th>로그인 일자</th>
+                       <th>접속 IP</th>
+                       <th>접속 UserAgent</th>
+                   </tr>
+               </thead>
+               <tbody>
+                    <tr th:each="x , i: ${logList}">
+                        <td th:text="${i.size - i.index}"></td>
+                        <td th:text="${x.accessDateText}"></td>
+                        <td th:text="${x.ip}"></td>
+                        <td th:text="${x.agent}"></td>
+                    </tr>
+               </tbody>
+           </table>
+       </div>
    </div>
 </body>
 </html>

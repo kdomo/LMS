@@ -39,7 +39,7 @@
     <select id="selectList" resultType="com.domo.lms.model.MemberDto">
         select *, (select access_date
                     from member_log
-                    where member_log.user_name = member.user_id
+                    where member_log.user_id = member.user_id
                     order by access_date desc
                     limit 1) as last_access_date
         from member

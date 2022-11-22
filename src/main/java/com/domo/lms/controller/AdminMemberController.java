@@ -2,8 +2,10 @@ package com.domo.lms.controller;
 
 import com.domo.lms.entity.Member;
 import com.domo.lms.model.MemberDto;
+import com.domo.lms.model.MemberLogDto;
 import com.domo.lms.model.MemberParam;
 import com.domo.lms.model.MemberStatusInput;
+import com.domo.lms.service.MemberLogService;
 import com.domo.lms.service.MemberService;
 import com.domo.lms.util.PageUtil;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminMemberController extends BaseController {
     private final MemberService memberService;
+    private final MemberLogService memberLogService;
     @GetMapping("/list")
     public String list(Model model, MemberParam parameter) {
         parameter.init();
@@ -43,7 +46,9 @@ public class AdminMemberController extends BaseController {
     @GetMapping("/detail")
     public String detail(Model model, String userId) {
         MemberDto member = memberService.detail(userId);
+        List<MemberLogDto> logList = memberLogService.findAllByUserId(userId);
         model.addAttribute("member", member);
+        model.addAttribute("logList", logList);
         return "admin/member/detail";
     }
 
