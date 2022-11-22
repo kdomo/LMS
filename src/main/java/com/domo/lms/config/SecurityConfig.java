@@ -33,6 +33,11 @@ public class SecurityConfig {
     }
 
     @Bean
+    UserAuthenticationSuccessHandler getSuccessHandler() {
+        return new UserAuthenticationSuccessHandler();
+    }
+
+    @Bean
     public WebSecurityCustomizer configure() {
         return (web) -> web.ignoring().mvcMatchers(
 //                "member/register"
@@ -68,6 +73,7 @@ public class SecurityConfig {
                 .loginPage("/member/login")
                 .defaultSuccessUrl("/")
                 .failureHandler(getFailurlHandler()).permitAll()
+                .successHandler(getSuccessHandler())
                 .and()
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
