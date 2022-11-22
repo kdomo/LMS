@@ -7,6 +7,7 @@ import com.domo.lms.model.MemberDto;
 import com.domo.lms.service.CategoryService;
 import com.domo.lms.service.CourseService;
 import com.domo.lms.util.PageUtil;
+import com.domo.lms.util.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,8 +15,10 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -25,6 +28,7 @@ import java.util.List;
 public class AdminCourseController extends BaseController {
     private final CourseService courseService;
     private final CategoryService categoryService;
+    private final S3Uploader s3Uploader;
 
     @GetMapping("/list")
     public String list(Model model, CourseParam parameter) {
@@ -74,10 +78,17 @@ public class AdminCourseController extends BaseController {
     }
 
     @PostMapping({"/add", "/edit"})
-    public String addSubmit(Model model, CourseInput parameter, HttpServletRequest request) {
+    public String addSubmit(Model model,
+                            CourseInput parameter,
+                            HttpServletRequest request,
+                            MultipartFile file) throws IOException {
+
+        String uploadPath = s3Uploader.upload(file, "files").replace("https://", "http://");
+        parameter.setFileUrl(uploadPath);
 
         boolean editMode = request.getRequestURI().contains("/edit");
         CourseDto detail = new CourseDto();
+
 
         if (editMode) {
             long id = parameter.getId();

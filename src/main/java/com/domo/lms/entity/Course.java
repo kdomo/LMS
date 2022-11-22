@@ -39,4 +39,5 @@ public class Course {
     private LocalDateTime regDt;
     private LocalDateTime upDt;
 
+    private String fileUrl;
 }

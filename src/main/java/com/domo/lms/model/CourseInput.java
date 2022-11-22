@@ -16,4 +16,6 @@ public class CourseInput {
     private String saleEndDtText;
 
     private String idList;
+
+    private String fileUrl;
 }

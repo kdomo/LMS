@@ -29,6 +29,8 @@ public class CourseDto {
     private LocalDateTime regDt;
     private LocalDateTime upDt;
 
+    private String fileUrl;
+
     long totalCount;
     long seq;
 
@@ -46,6 +48,7 @@ public class CourseDto {
                 .saleEndDt(course.getSaleEndDt())
                 .regDt(course.getRegDt())
                 .upDt(course.getUpDt())
+                .fileUrl(course.getFileUrl())
                 .build();
 
     }
