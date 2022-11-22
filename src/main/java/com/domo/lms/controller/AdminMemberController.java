@@ -18,7 +18,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/admin/member")
 @RequiredArgsConstructor
-public class AdminMemberController extends BaseController{
+public class AdminMemberController extends BaseController {
     private final MemberService memberService;
     @GetMapping("/list")
     public String list(Model model, MemberParam parameter) {

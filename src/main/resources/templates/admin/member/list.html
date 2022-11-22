@@ -63,6 +63,7 @@
                     <th>이메일 인증 여부</th>
                     <th>가입일</th>
                     <th>회원 구분</th>
+                    <th>마지막 로그인 일자</th>
                 </tr>
             </thead>
             <tbody>
@@ -73,8 +74,9 @@
                     <td th:text="${x.phone}">010-1111-1111</td>
                     <td th:if="${x.emailAuthYn}">Y</td>
                     <td th:if="${!x.emailAuthYn}">N</td>
-                    <td th:text="${x.regDt}">2021.08.07</td>
+                    <td th:text="${x.regDtText}">2021.08.07</td>
                     <td th:text="${x.role}">USER</td>
+                    <td th:text="${x.lastAccessDateText}">USER</td>
                 </tr>
             </tbody>
         </table>

@@ -48,6 +48,8 @@ public class MemberDto {
     private String addr;
     private String addrDetail;
 
+    private LocalDateTime lastAccessDate;
+
     long totalCount;
 
     long seq;
@@ -80,5 +82,11 @@ public class MemberDto {
     public String getUptDtText() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss");
         return uptDt != null ? uptDt.format(formatter) : "";
+    }
+
+
+    public String getLastAccessDateText() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
+        return lastAccessDate != null ? lastAccessDate.format(formatter) : "";
     }
 }
