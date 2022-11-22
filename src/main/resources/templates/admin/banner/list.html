@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>관리자 화면</title>
+    <style>
+        .list table {
+            width: 100%;
+            border-collapse: collapse;
+
+        }
+
+        .list table th, .list table td {
+            border: 1px solid #000;
+        }
+        .noting{
+            text-align: center;
+        }
+        .pager {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .pager a.on {
+            font-weight: bold;
+            color: red;
+        }
+        .list .buttons{
+            padding: 10px 0;
+            position: relative;
+        }
+        .list .buttons .total-count {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+        .list .buttons a, .list .buttons button {
+            border-width: 0;
+            background-color: transparent;
+            text-decoration: underline;
+            font-size: 14px;
+            line-height: 20px;
+            height: 20px;
+            color: #000;
+            cursor: pointer;
+        }
+        .pager {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .pager a.on {
+            font-weight: bold;
+            color: red;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+           $('#DeleteBtn').on('click',function() {
+               var $checked = $('#dataList input[type=checkbox]:checked');
+
+               if($checked.length < 1) {
+                   alert('삭제 할 데이터를 선택해주세요.');
+                   return false;
+               }
+               var idList = [];
+               $.each($checked, function(k, v) {
+                   idList.push($(this).val());
+               })
+
+               if (!confirm('선택한 데이터를 삭제하시겠습니까?')) {
+                   return false;
+               }
+
+               var $deleteForm = $('form[name=deleteForm]');
+               $deleteForm.find('input[name=idList]').val(idList.join(','));
+               $deleteForm.submit();
+           });
+
+           $('#selectAll').on('click',function() {
+               var checked = $(this).is(':checked');
+
+               $('#dataList input[type=checkbox]').each(function (k, v) {
+                  $(this).prop('checked', checked);
+               });
+           })
+        });
+    </script>
+</head>
+<body>
+    <div th:replace="/fragments/layout.html :: fragment-admin-body-menu"></div>
+    <h1>배너 관리</h1>
+
+
+    <div class="list">
+        <div class="buttons">
+            <p class="total-count">전체 <span th:text="${totalCount}"></span>개</p>
+            <a href="/admin/banner/add">배너 등록</a>
+            <button id="DeleteBtn" type="button">선택 삭제</button>
+        </div>
+
+        <table>
+            <thead>
+            <tr>
+                <th><input type="checkbox" id="selectAll"/></th>
+                <th>No</th>
+                <th>배너명</th>
+                <th>이미지</th>
+                <th>등록일</th>
+
+            </tr>
+            </thead>
+            <tbody id="dataList">
+                <tr th:each="x : ${list}">
+                    <td><input type="checkbox" th:value="${x.id}"/></td>
+                    <td th:text="${x.seq}">1</td>
+                    <td><a th:href="'/admin/banner/edit?id=' + ${x.id}" th:text="${x.bannerName}">배너명</a></td>
+                    <td><img class="imgUrl" th:src="${x.bannerImgUrl}"></td>
+                    <td th:text="${x.regDtText}">2021.01.01</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="pager" th:utext="${pager}">
+
+        </div>
+    </div>
+    <form method="post" name="deleteForm" action="/admin/banner/delete">
+        <input type="hidden" name="idList">
+    </form>
+</body>
+</html>
